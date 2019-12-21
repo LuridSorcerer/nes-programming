@@ -76,7 +76,7 @@ mirroring = 1
 	lda #$02
 	sta $4003
 	lda #$bf
-	sta 4000
+	sta $4000
 
 forever:
 	jmp forever
