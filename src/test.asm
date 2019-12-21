@@ -1,41 +1,5 @@
-; tutorial:
-; https://www.moria.us/blog/2018/03/nes-development
-
-; ASM basics:
-; https://nesdoug.com/2016/03/10/26-asm-basics/
-
-; PPU registers
-PPUCTRL   = $2000
-PPUMASK   = $2001
-PPUSTATUS = $2002
-OAMADDR   = $2003
-OAMDATA   = $2004
-PPUSCROLL = $2005
-PPUADDR   = $2006
-PPUDATA   = $2007
-
-; other IO registers
-OAMDMA    = $4014
-APUSTATUS = $4015
-JOYPAD1   = $4016
-JOYPAD2   = $4017
-
-; prg pages (16k)
-prg_npage = 1
-; chr pages (8k)
-chr_npage = 1
-; mapper number
-mapper = 0
-; mirroring mode
-mirroring = 1
-
-; 16-byte INES header
-.segment "INES"
-	.byte 'N', 'E', 'S', $1a
-	.byte prg_npage
-	.byte chr_npage
-	.byte ( (mapper & $0f) << 4 ) | (mirroring & 1) 
-	.byte mapper & $f0
+.include "defs.asm"
+.include "header.asm"
 
 .code
 
