@@ -5,7 +5,7 @@ CC=ca65
 LD=ld65
 LDFLAGS= -C src/test.cfg
 SRC=src/test.asm
-OBJ=src/test.o
+OBJ=obj/test.o
 EXE=bin/test.nes
 
 all:
