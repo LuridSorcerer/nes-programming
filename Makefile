@@ -12,9 +12,11 @@ EXE := bin/test.nes
 
 all: $(EXE)
 
-$(EXE): $(SRC)
-	$(CC) -o $(OBJ) $(SRC)
+$(EXE): $(OBJ)
 	$(LD) -o $(EXE) $(LDFLAGS) $(OBJ)
+
+$(OBJ): $(SRC)
+	$(CC) -o $(OBJ) $(SRC)
 
 clean:
 	rm $(OBJ) $(EXE)
