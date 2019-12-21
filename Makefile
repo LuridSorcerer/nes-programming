@@ -12,7 +12,7 @@ EXE := bin/test.nes
 
 all: $(EXE)
 
-$(EXE): 
+$(EXE): $(SRC)
 	$(CC) -o $(OBJ) $(SRC)
 	$(LD) -o $(EXE) $(LDFLAGS) $(OBJ)
 
