@@ -4,6 +4,22 @@
 ; ASM basics:
 ; https://nesdoug.com/2016/03/10/26-asm-basics/
 
+; PPU registers
+PPUCTRL   = $2000
+PPUMASK   = $2001
+PPUSTATUS = $2002
+OAMADDR   = $2003
+OAMDATA   = $2004
+PPUSCROLL = $2005
+PPUADDR   = $2006
+PPUDATA   = $2007
+
+; other IO registers
+OAMDMA    = $4014
+APUSTATUS = $4015
+JOYPAD1   = $4016
+JOYPAD2   = $4017
+
 ; prg pages (16k)
 prg_npage = 1
 ; chr pages (8k)
@@ -13,21 +29,6 @@ mapper = 0
 ; mirroring mode
 mirroring = 1
 
-; constants
-PPUCTRL   = $2000
-PPUMASK   = $2001
-PPUSTATUS = $2002
-OAMADDR   = $2003
-OAMDATA   = $2004
-PPUSCROLL = $2005
-PPUADDR   = $2006
-PPUDATA   = $2007
-OAMDMA    = $4014
-APUSTATUS = $4015
-JOYPAD1   = $4016
-JOYPAD2   = $4017
-
-
 ; 16-byte INES header
 .segment "INES"
 	.byte 'N', 'E', 'S', $1a
@@ -36,22 +37,7 @@ JOYPAD2   = $4017
 	.byte ( (mapper & $0f) << 4 ) | (mirroring & 1) 
 	.byte mapper & $f0
 
-; vectors
-.segment "VECTOR"
-.addr nmi   ; non-maskable interrupt, called at vblank
-.addr reset ; called at power on and reset button press
-.addr irq   ; external hardware interrupt, not used yet
-
-
 .code
-
-.proc nmi
-	rti
-.endproc
-
-.proc irq
-	rti
-.endproc
 
 .proc reset
 	sei
@@ -95,3 +81,20 @@ JOYPAD2   = $4017
 forever:
 	jmp forever
 .endproc
+
+.proc nmi
+	rti
+.endproc
+
+.proc irq
+	rti
+.endproc
+
+; vectors
+.segment "VECTOR"
+.addr nmi   ; non-maskable interrupt, called at vblank
+.addr reset ; called at power on and reset button press
+.addr irq   ; external hardware interrupt, not used yet
+
+.segment "CHR0a"
+.segment "CHR0b"
