@@ -4,21 +4,26 @@
 .code
 
 .proc reset
-	sei
-	cld
-	ldx #$ff
+
+	sei		; SEt Interrupt: disable interrupts
+	cld		; CLear Decimal: disable binary coded decimal mode
+			; 	(not supported by the 2A03 anyway)
+
+	
+	ldx #$ff	; Set stack pointer to $FF
 	txs
-	inx
+
+	inx				; Set X to zero (overflow from $FF)
 	stx PPUCTRL
 	stx PPUMASK
 	stx APUSTATUS
 
-:	bit PPUSTATUS
+:	bit PPUSTATUS	; Wait for PPU to warm up
 	bpl :-
-:	bit PPUSTATUS
+:	bit PPUSTATUS	; Still waiting...
 	bpl :-
 
-	txa
+	txa				; Loop through memory and zero it out
 :	sta $000, x
 	sta $100, x
 	sta $200, x
@@ -30,10 +35,10 @@
 	inx
 	bne :-
 
-:	bit PPUSTATUS
+:	bit PPUSTATUS	; Wait one more time for PPU
 	bpl :-
 
-	lda #$01
+	lda #$01		; play an annoying continuous beep
 	sta $4015
 	lda #$08
 	sta $4002
@@ -42,15 +47,15 @@
 	lda #$bf
 	sta $4000
 
-forever:
+forever:			; loop forever, nothing else to do
 	jmp forever
 .endproc
 
-.proc nmi
+.proc nmi			; NMI interrupt, empty
 	rti
 .endproc
 
-.proc irq
+.proc irq			; IRQ interrupt, empty
 	rti
 .endproc
 
@@ -60,5 +65,6 @@ forever:
 .addr reset ; called at power on and reset button press
 .addr irq   ; external hardware interrupt, not used yet
 
+; Empty CHR data
 .segment "CHR0a"
 .segment "CHR0b"
