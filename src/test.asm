@@ -46,6 +46,9 @@
 	sta $4003
 	lda #$bf
 	sta $4000
+	
+	lda #%10000000	; intensify blues
+	sta PPUMASK
 
 forever:			; loop forever, nothing else to do
 	jmp forever
