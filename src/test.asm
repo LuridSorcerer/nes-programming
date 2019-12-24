@@ -38,14 +38,14 @@
 :	bit PPUSTATUS	; Wait one more time for PPU
 	bpl :-
 
-	lda #$01		; play an annoying continuous beep
-	sta $4015
-	lda #$08
-	sta $4002
-	lda #$02
-	sta $4003
-	lda #$bf
-	sta $4000
+;	lda #$01		; play an annoying continuous beep
+;	sta $4015
+;	lda #$08
+;	sta $4002
+;	lda #$02
+;	sta $4003
+;	lda #$bf
+;	sta $4000
 	
 ;	lda #%10000000	; intensify blues
 ;	sta PPUMASK
