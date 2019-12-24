@@ -47,12 +47,30 @@
 	lda #$bf
 	sta $4000
 	
-	lda #%10000000	; intensify blues
-	sta PPUMASK
+;	lda #%10000000	; intensify blues
+;	sta PPUMASK
+
+	lda PPUSTATUS
+	lda #$3f		; set palette address
+	sta PPUADDR
+	lda #$10
+	sta PPUADDR
+	
+	ldx #$00
+PaletteLoop:
+	lda PaletteData, x
+	sta PPUDATA
+	inx
+	cpx #$20
+	bne PaletteLoop
 
 forever:			; loop forever, nothing else to do
 	jmp forever
 .endproc
+
+PaletteData:
+	.byte $1d,$20,$21,$22, $23,$24,$25,$26, $27,$28,$29,$2a, $2b,$2b,$2c,$2d
+	.byte $1d,$20,$21,$22, $23,$24,$25,$26, $27,$28,$29,$2a, $2b,$2b,$2c,$2d
 
 .proc nmi			; NMI interrupt, empty
 	rti
@@ -70,4 +88,6 @@ forever:			; loop forever, nothing else to do
 
 ; Empty CHR data
 .segment "CHR0a"
+.incbin "test.chr"
+
 .segment "CHR0b"
