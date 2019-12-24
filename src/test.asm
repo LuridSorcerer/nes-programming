@@ -53,16 +53,29 @@
 	lda PPUSTATUS
 	lda #$3f		; set palette address
 	sta PPUADDR
-	lda #$10
+	lda #$00
 	sta PPUADDR
 	
-	ldx #$00
+	ldx #$00			; load palette
 PaletteLoop:
 	lda PaletteData, x
 	sta PPUDATA
 	inx
 	cpx #$20
 	bne PaletteLoop
+
+	lda #$80
+	sta $0200
+	sta $0203
+	lda #$00
+	sta $0201
+	sta $0202
+
+	lda #%10000000
+	sta PPUCTRL
+
+	lda #%00010000
+	sta PPUMASK
 
 forever:			; loop forever, nothing else to do
 	jmp forever
@@ -72,8 +85,14 @@ PaletteData:
 	.byte $1d,$20,$21,$22, $23,$24,$25,$26, $27,$28,$29,$2a, $2b,$2b,$2c,$2d
 	.byte $1d,$20,$21,$22, $23,$24,$25,$26, $27,$28,$29,$2a, $2b,$2b,$2c,$2d
 
-.proc nmi			; NMI interrupt, empty
+.proc nmi			; NMI interrupt
+
+	lda #$00		; load sprites, low byte
+	sta OAMADDR
+	lda #$02		; high byte
+	sta OAMDATA
 	rti
+
 .endproc
 
 .proc irq			; IRQ interrupt, empty
