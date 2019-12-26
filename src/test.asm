@@ -28,7 +28,6 @@
 :	lda #$00
 	sta $0000, x
 	sta $0100, x
-	;sta $0200, x
 	sta $0300, x
 	sta $0400, x
 	sta $0500, x
@@ -75,11 +74,10 @@
 	sta $0202	; attributes (palette, mirroring, etc.)
 	
 	lda #$88		; put another sprite up
-	sta $0204
-	lda #$80
-	sta $0207
+	sta $0204		; set y-coord
+	sta $0207		; set x-coord
 	lda #$00
-	sta $0205
+	sta $0205		; tile number
 	lda #%01000001	; flip horrizontal, use second palette
 	sta $0206
 
