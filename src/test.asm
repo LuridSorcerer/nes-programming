@@ -67,12 +67,21 @@
 	cpx #$20
 	bne :-
 
-	lda #$80			; put a sprite on screen
-	sta $0200
-	sta $0203
+	lda #$80	; put a sprite on screen
+	sta $0200	; set y-coordinate
+	sta $0203	; set x-coordinate
 	lda #$00
-	sta $0201
-	sta $0202
+	sta $0201	; tile number
+	sta $0202	; attributes (palette, mirroring, etc.)
+	
+	lda #$88		; put another sprite up
+	sta $0204
+	lda #$80
+	sta $0207
+	lda #$00
+	sta $0205
+	lda #%01000001	; flip horrizontal, use second palette
+	sta $0206
 
 	lda #%10000000		; enable NMI
 	sta PPUCTRL
