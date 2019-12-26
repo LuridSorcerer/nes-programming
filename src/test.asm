@@ -103,6 +103,9 @@ PaletteData:
 	sta OAMADDR
 	lda #$02		; high byte
 	sta OAMDMA
+	
+	inc $0203	; Move a sprite
+	
 	rti
 
 .endproc
