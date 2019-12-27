@@ -123,4 +123,4 @@ PaletteData:
 .incbin "test.chr"
 
 .segment "CHR0b"
-.incbin "test.chr"
+.incbin "test2.chr"
