@@ -76,7 +76,7 @@
 	lda #$88		; put another sprite up
 	sta $0204		; set y-coord
 	sta $0207		; set x-coord
-	lda #$00
+	lda #$01
 	sta $0205		; tile number
 	lda #%01000001	; flip horrizontal, use second palette
 	sta $0206
