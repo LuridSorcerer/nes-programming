@@ -10,4 +10,4 @@ Useful links:
 Tools:
 
 * FCEUX: http://www.fceux.com/web/download.html
-* Tile Molestor: https://www.romhacking.net/utilities/109/
+* Tile Layer Pro: https://www.romhacking.net/utilities/108/
