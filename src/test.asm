@@ -58,7 +58,7 @@
 :	lda SpriteData, x
 	sta $0200, x
 	inx
-	cpx #$10
+	cpx #$20
 	bne :-
 
 	lda #%10000000		; enable NMI
@@ -82,6 +82,10 @@ SpriteData:
 	.byte $88, $52, $00, $80
 	.byte $88, $53, $00, $88
 
+	.byte $90, $42, $01, $80
+	.byte $90, $43, $01, $88
+	.byte $98, $52, $01, $80
+	.byte $98, $53, $01, $88
 
 .proc nmi			; NMI interrupt
 
@@ -89,11 +93,20 @@ SpriteData:
 	sta OAMADDR
 	lda #$02		; high byte
 	sta OAMDMA
-	
+
+	lda #$01	; latch controllers
+	sta JOYPAD1
+	lda #$00
+	sta JOYPAD1
+
+	lda JOYPAD1
+	and #%00000001	; check button A
+	beq ReadADone	; if not pressed, skip moving sprite
 	inc $0203	; Move a sprite
 	inc $0203+4	
 	inc $0203+8	
 	inc $0203+12
+ReadADone:
 	
 	rti
 
