@@ -22,7 +22,8 @@
 	jsr vblankwait	; Wait for PPU to warm up
 	jsr vblankwait
 
-:	lda #$00		; Loop through memory and zero it out
+ClearMem:
+	lda #$00		; Loop through memory and zero it out
 	sta $0000, x
 	sta $0100, x
 	sta $0300, x
@@ -33,7 +34,7 @@
 	lda #$fe		; Except sprite locations, move them offscreen
 	sta $0200, x
 	inx
-	bne :-
+	bne ClearMem
 
 	jsr vblankwait	; Wait one more time for PPU warmup
 
@@ -44,18 +45,20 @@
 	sta PPUADDR
 	
 	ldx #$00			; load palette
-:	lda PaletteData, x
+LoadPalette:
+	lda PaletteData, x
 	sta PPUDATA
 	inx
 	cpx #$20
-	bne :-
+	bne LoadPalette
 
 	ldx #$00			; load sprites
-:	lda SpriteData, x
+LoadSprites:
+	lda SpriteData, x
 	sta $0200, x
 	inx
 	cpx #$20
-	bne :-
+	bne LoadSprites
 
 	lda $2002		; load background nametable
 	lda #$20
@@ -63,11 +66,12 @@
 	lda #$00
 	sta PPUADDR
 	ldx #$00
-:	lda NametableData, x
+LoadNametable:
+	lda NametableData, x
 	sta PPUDATA
 	inx
 	cpx #$80
-	bne :-
+	bne LoadNametable
 
 	lda $2002		; load attribute table
 	lda #$23
@@ -75,11 +79,12 @@
 	lda #$C0
 	sta PPUADDR
 	ldx #$00
-:	lda AttributeTableData, X
+LoadAttributetable:	
+	lda AttributeTableData, X
 	sta PPUDATA
 	inx
 	cpx #$08
-	bne :-
+	bne LoadAttributetable
 
 	lda #%10010000		; enable NMI
 	sta PPUCTRL
