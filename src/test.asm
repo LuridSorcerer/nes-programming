@@ -66,20 +66,43 @@
 	cpx #$20
 	bne :-
 
-	lda #$80	; put a sprite on screen
+	;------------
+	; draw waffle
+	;------------
+	lda #$80
 	sta $0200	; set y-coordinate
 	sta $0203	; set x-coordinate
+	lda #$42
+	sta $0201	; top left tile
 	lda #$00
-	sta $0201	; tile number
 	sta $0202	; attributes (palette, mirroring, etc.)
 	
-	lda #$88		; put another sprite up
-	sta $0204		; set y-coord
-	sta $0207		; set x-coord
-	lda #$01
-	sta $0205		; tile number
-	lda #%01000001	; flip horrizontal, use second palette
-	sta $0206
+	lda #$80
+	sta $0200+4	; set y-coordinate
+	lda #$88
+	sta $0203+4	; set x-coordinate
+	lda #$43
+	sta $0201+4	; top right tile
+	lda #$00
+	sta $0202+4	; attributes (palette, mirroring, etc.)
+
+	lda #$88
+	sta $0200+8	; set y-coordinate
+	lda #$80
+	sta $0203+8	; set x-coordinate
+	lda #$52	; bottom left tile
+	sta $0201+8	
+	lda #$00	; attributes (palette, mirroring, etc.)
+	sta $0202+8
+
+	lda #$88
+	sta $0200+12	; set y-coordinate
+	lda #$88
+	sta $0203+12	; set x-coordinate
+	lda #$53		; bottom right tile
+	sta $0201+12
+	lda #$00
+	sta $0202+12	; attributes (palette, mirroring, etc.)		
 
 	lda #%10000000		; enable NMI
 	sta PPUCTRL
@@ -92,8 +115,8 @@ forever:			; loop forever, nothing else to do
 .endproc
 
 PaletteData:
-	.byte $1d,$20,$21,$22, $23,$24,$25,$26, $27,$28,$29,$2a, $2b,$2b,$2c,$2d
-	.byte $1c,$20,$21,$22, $23,$24,$25,$26, $27,$28,$29,$2a, $2b,$2b,$2c,$2d
+	.byte $00,$18,$27,$28, $23,$24,$25,$26, $27,$28,$29,$2a, $2b,$2b,$2c,$2d
+	.byte $22,$18,$27,$28, $23,$24,$25,$26, $27,$28,$29,$2a, $2b,$2b,$2c,$2d
 
 .proc nmi			; NMI interrupt
 
@@ -103,6 +126,9 @@ PaletteData:
 	sta OAMDMA
 	
 	inc $0203	; Move a sprite
+	inc $0203+4	
+	inc $0203+8	
+	inc $0203+12
 	
 	rti
 
