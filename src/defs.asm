@@ -8,6 +8,9 @@ PPUSCROLL = $2005
 PPUADDR   = $2006
 PPUDATA   = $2007
 
+; APU registers
+APUDMC    = $4010
+
 ; other IO registers
 OAMDMA    = $4014
 APUSTATUS = $4015

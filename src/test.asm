@@ -14,18 +14,17 @@
 	txs
 
 	inx				; Set X to zero (overflow from $FF)
-	stx PPUCTRL
-	stx PPUMASK
-	stx APUSTATUS
-	stx $4010
+	stx PPUCTRL		; disable NMI
+	stx PPUMASK		; disable rendering
+	stx APUSTATUS	; silence sound channels
+	stx APUDMC		; disable delta modulation channel IRQs
 
 :	bit PPUSTATUS	; Wait for PPU to warm up
 	bpl :-
 :	bit PPUSTATUS	; Still waiting...
 	bpl :-
 
-	txa				; Loop through memory and zero it out
-:	lda #$00
+:	lda #$00		; Loop through memory and zero it out
 	sta $0000, x
 	sta $0100, x
 	sta $0300, x
