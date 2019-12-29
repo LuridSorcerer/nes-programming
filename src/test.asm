@@ -41,18 +41,6 @@
 :	bit PPUSTATUS	; Wait one more time for PPU
 	bpl :-
 
-;	lda #$01		; play an annoying continuous beep
-;	sta $4015
-;	lda #$08
-;	sta $4002
-;	lda #$02
-;	sta $4003
-;	lda #$bf
-;	sta $4000
-	
-;	lda #%10000000	; intensify blues
-;	sta PPUMASK
-
 	lda PPUSTATUS
 	lda #$3f		; set palette address
 	sta PPUADDR
@@ -66,43 +54,12 @@
 	cpx #$20
 	bne :-
 
-	;------------
-	; draw waffle
-	;------------
-	lda #$80
-	sta $0200	; set y-coordinate
-	sta $0203	; set x-coordinate
-	lda #$42
-	sta $0201	; top left tile
-	lda #$00
-	sta $0202	; attributes (palette, mirroring, etc.)
-	
-	lda #$80
-	sta $0200+4	; set y-coordinate
-	lda #$88
-	sta $0203+4	; set x-coordinate
-	lda #$43
-	sta $0201+4	; top right tile
-	lda #$00
-	sta $0202+4	; attributes (palette, mirroring, etc.)
-
-	lda #$88
-	sta $0200+8	; set y-coordinate
-	lda #$80
-	sta $0203+8	; set x-coordinate
-	lda #$52	; bottom left tile
-	sta $0201+8	
-	lda #$00	; attributes (palette, mirroring, etc.)
-	sta $0202+8
-
-	lda #$88
-	sta $0200+12	; set y-coordinate
-	lda #$88
-	sta $0203+12	; set x-coordinate
-	lda #$53		; bottom right tile
-	sta $0201+12
-	lda #$00
-	sta $0202+12	; attributes (palette, mirroring, etc.)		
+	ldx #$00			; load sprites
+:	lda SpriteData, x
+	sta $0200, x
+	inx
+	cpx #$10
+	bne :-
 
 	lda #%10000000		; enable NMI
 	sta PPUCTRL
@@ -117,6 +74,14 @@ forever:			; loop forever, nothing else to do
 PaletteData:
 	.byte $00,$18,$27,$28, $23,$24,$25,$26, $27,$28,$29,$2a, $2b,$2b,$2c,$2d
 	.byte $22,$18,$27,$28, $23,$24,$25,$26, $27,$28,$29,$2a, $2b,$2b,$2c,$2d
+
+SpriteData:
+	; y, tile, attributes, x
+	.byte $80, $42, $00, $80
+	.byte $80, $43, $00, $88
+	.byte $88, $52, $00, $80
+	.byte $88, $53, $00, $88
+
 
 .proc nmi			; NMI interrupt
 
@@ -134,7 +99,7 @@ PaletteData:
 
 .endproc
 
-.proc irq			; IRQ interrupt, empty
+.proc irq	; IRQ interrupt, empty
 	rti
 .endproc
 
