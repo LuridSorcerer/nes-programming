@@ -61,10 +61,34 @@
 	cpx #$20
 	bne :-
 
-	lda #%10000000		; enable NMI
+	lda $2002		; load background nametable
+	lda #$20
+	sta PPUADDR
+	lda #$00
+	sta PPUADDR
+	ldx #$00
+:	lda NametableData, x
+	sta PPUDATA
+	inx
+	cpx #$80
+	bne :-
+
+	lda $2002		; load attribute table
+	lda #$23
+	sta PPUADDR
+	lda #$C0
+	sta PPUADDR
+	ldx #$00
+:	lda AttributeTableData, X
+	sta PPUDATA
+	inx
+	cpx #$08
+	bne :-
+
+	lda #%10010000		; enable NMI
 	sta PPUCTRL
 
-	lda #%00010000		; enable sprites
+	lda #%00011110		; enable sprites
 	sta PPUMASK
 
 forever:			; loop forever, nothing else to do
@@ -87,6 +111,22 @@ SpriteData:
 	.byte $98, $52, $01, $80
 	.byte $98, $53, $01, $88
 
+NametableData:
+	.byte $04,$04,$04,$04, $04,$04,$04,$04, $04,$04,$04,$04, $04,$04,$04,$04  ; row 1
+	.byte $04,$04,$04,$04, $04,$04,$04,$04, $04,$04,$04,$04, $04,$04,$04,$04
+
+	.byte $05,$05,$05,$05, $05,$05,$05,$05, $05,$05,$05,$05, $05,$05,$05,$05  ; row 2
+	.byte $05,$05,$05,$05, $05,$05,$05,$05, $05,$05,$05,$05, $05,$05,$05,$05
+
+	.byte $06,$06,$06,$06, $06,$06,$06,$06, $06,$06,$06,$06, $06,$06,$06,$06  ; row 3
+	.byte $06,$06,$06,$06, $06,$06,$06,$06, $06,$06,$06,$06, $06,$06,$06,$06 
+
+	.byte $07,$07,$07,$07, $07,$07,$07,$07, $07,$07,$07,$07, $07,$07,$07,$07  ; row 4
+	.byte $07,$07,$07,$07, $07,$07,$07,$07, $07,$07,$07,$07, $07,$07,$07,$07
+
+AttributeTableData:
+	.byte %00000000, %00010000, %00100000, %00010000, %00000000, %00000000, %00110000, %00000000 
+
 .proc nmi			; NMI interrupt
 
 	lda #$00		; load sprites, low byte
@@ -108,6 +148,10 @@ SpriteData:
 	inc $0203+12
 ReadADone:
 	
+	lda #$00		; don't scroll background
+	sta PPUSCROLL
+	sta PPUSCROLL
+
 	rti
 
 .endproc
