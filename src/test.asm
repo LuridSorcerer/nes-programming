@@ -19,10 +19,8 @@
 	stx APUSTATUS	; silence sound channels
 	stx APUDMC		; disable delta modulation channel IRQs
 
-:	bit PPUSTATUS	; Wait for PPU to warm up
-	bpl :-
-:	bit PPUSTATUS	; Still waiting...
-	bpl :-
+	jsr vblankwait	; Wait for PPU to warm up
+	jsr vblankwait
 
 :	lda #$00		; Loop through memory and zero it out
 	sta $0000, x
@@ -37,8 +35,7 @@
 	inx
 	bne :-
 
-:	bit PPUSTATUS	; Wait one more time for PPU
-	bpl :-
+	jsr vblankwait	; Wait one more time for PPU warmup
 
 	lda PPUSTATUS
 	lda #$3f		; set palette address
@@ -93,6 +90,11 @@
 forever:			; loop forever, nothing else to do
 	jmp forever
 .endproc
+
+vblankwait:
+	bit PPUSTATUS
+	bpl vblankwait
+	rts
 
 PaletteData:
 	.byte $00,$18,$27,$28, $23,$24,$25,$26, $27,$28,$29,$2a, $2b,$2b,$2c,$2d
