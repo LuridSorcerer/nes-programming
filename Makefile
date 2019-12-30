@@ -5,6 +5,9 @@ CC := ca65
 LD := ld65
 LDFLAGS := -C src/test.cfg
 SRC := src/test.asm
+DEPS := src/attribtable.asm src/defs.asm src/header.asm \
+	src/nametable.asm src/palette.asm src/sprite.asm src/test.chr \
+	src/test2.chr
 OBJ := obj/test.o
 EXE := bin/test.nes
 
@@ -15,7 +18,7 @@ all: $(EXE)
 $(EXE): $(OBJ)
 	$(LD) -o $(EXE) $(LDFLAGS) $(OBJ)
 
-$(OBJ): $(SRC)
+$(OBJ): $(SRC) $(DEPS)
 	$(CC) -o $(OBJ) $(SRC)
 
 clean:
