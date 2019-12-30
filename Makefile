@@ -22,4 +22,4 @@ $(OBJ): $(SRC) $(DEPS)
 	$(CC) -o $(OBJ) $(SRC)
 
 clean:
-	rm $(OBJ) $(EXE)
+	rm -f $(OBJ) $(EXE)
