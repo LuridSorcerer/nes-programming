@@ -57,7 +57,7 @@ LoadSprites:
 	lda SpriteData, x
 	sta $0200, x
 	inx
-	cpx #$20
+	cpx #$38
 	bne LoadSprites
 
 	lda $2002		; load background nametable
@@ -112,7 +112,7 @@ NametableData:
 
 AttributeTableData:
 	.include "attribtable.asm"
-	
+
 .proc nmi			; NMI interrupt
 
 	lda #$00		; load sprites, low byte
