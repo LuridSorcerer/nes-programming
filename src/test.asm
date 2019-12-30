@@ -49,7 +49,7 @@ LoadPalette:
 	lda PaletteData, x
 	sta PPUDATA
 	inx
-	cpx #$20
+	cpx #(PaletteEnd - PaletteData)
 	bne LoadPalette
 
 	ldx #$00			; load sprites
@@ -57,7 +57,7 @@ LoadSprites:
 	lda SpriteData, x
 	sta $0200, x
 	inx
-	cpx #$38
+	cpx #(SpriteEnd - SpriteData)
 	bne LoadSprites
 
 	lda $2002		; load background nametable
@@ -70,7 +70,7 @@ LoadNametable:
 	lda NametableData, x
 	sta PPUDATA
 	inx
-	cpx #$80
+	cpx #(NametableEnd - NametableData)
 	bne LoadNametable
 
 	lda $2002		; load attribute table
@@ -80,10 +80,10 @@ LoadNametable:
 	sta PPUADDR
 	ldx #$00
 LoadAttributetable:	
-	lda AttributeTableData, X
+	lda AttributetableData, X
 	sta PPUDATA
 	inx
-	cpx #$08
+	cpx #(AttributetableEnd - AttributetableData)
 	bne LoadAttributetable
 
 	lda #%10010000		; enable NMI
@@ -103,15 +103,19 @@ vblankwait:
 
 PaletteData:
 	.include "palette.asm"
+PaletteEnd:
 
 SpriteData:
 	.include "sprite.asm"
+SpriteEnd:
 
 NametableData:
 	.include "nametable.asm"
+NametableEnd:
 
-AttributeTableData:
+AttributetableData:
 	.include "attribtable.asm"
+AttributetableEnd:
 
 .proc nmi			; NMI interrupt
 
@@ -128,7 +132,7 @@ AttributeTableData:
 	lda JOYPAD1
 	and #%00000001	; check button A
 	beq ReadADone	; if not pressed, skip moving sprite
-	inc $0203	; Move a sprite
+	inc $0203		; Move a sprite
 	inc $0203+4	
 	inc $0203+8	
 	inc $0203+12
