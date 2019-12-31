@@ -1,6 +1,9 @@
 .include "defs.asm"
 .include "header.asm"
 
+.segment "ZEROPAGE"
+controller: .res 1
+
 .code
 
 .proc reset
