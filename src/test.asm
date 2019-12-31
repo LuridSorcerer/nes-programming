@@ -127,19 +127,55 @@ AttributetableEnd:
 	lda #$02		; high byte
 	sta OAMDMA
 
-	lda #$01	; latch controllers
+ReadController:
+	lda #$01		; latch controller
 	sta JOYPAD1
 	lda #$00
 	sta JOYPAD1
+	ldx #$08		; going to read 8 buttons
+ReadControllerLoop:
+	lda JOYPAD1		; read a button
+	lsr a			; move into carry register
+	rol controller	; move from carry to controller byte
+	dex
+	bne ReadControllerLoop
+;	rts
 
-	lda JOYPAD1
-	and #%00000001	; check button A
-	beq ReadADone	; if not pressed, skip moving sprite
-	inc $0203		; Move a sprite
+	lda controller	; check if right was pressed
+	and #%00000001
+	beq RightDone	; if not pressed, skip moving sprite
+	inc $0203		; Move sprite right
 	inc $0203+4	
 	inc $0203+8	
 	inc $0203+12
-ReadADone:
+RightDone:
+
+	lda controller	; check if left was pressed
+	and #%00000010
+	beq LeftDone	; if not, skip moving sprite
+	dec $0203		; move sprite left
+	dec $0203+4
+	dec $0203+8
+	dec $0203+12
+LeftDone:
+
+	lda controller	; check if down was pressed
+	and #%00000100
+	beq DownDone
+	inc $0200
+	inc $0200+4
+	inc $0200+8
+	inc $0200+12
+DownDone:
+
+	lda controller	; check if up was pressed
+	and #%00001000
+	beq UpDone
+	dec $0200
+	dec $0200+4
+	dec $0200+8
+	dec $0200+12
+UpDone:
 	
 	lda #$00		; don't scroll background
 	sta PPUSCROLL
