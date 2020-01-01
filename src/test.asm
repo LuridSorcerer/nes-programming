@@ -3,6 +3,8 @@
 
 .segment "ZEROPAGE"
 controller: .res 1
+playerx:	.res 1
+playery:	.res 1
 
 .code
 
@@ -104,6 +106,20 @@ vblankwait:
 	bpl vblankwait
 	rts
 
+ReadController:
+	lda #$01		; latch controller
+	sta JOYPAD1
+	lda #$00
+	sta JOYPAD1
+	ldx #$08		; going to read 8 buttons
+ReadControllerLoop:
+	lda JOYPAD1		; read a button
+	lsr a			; move into carry register
+	rol controller	; move from carry to controller byte
+	dex
+	bne ReadControllerLoop
+	rts
+
 PaletteData:
 	.include "palette.asm"
 PaletteEnd:
@@ -127,22 +143,10 @@ AttributetableEnd:
 	lda #$02		; high byte
 	sta OAMDMA
 
-ReadController:
-	lda #$01		; latch controller
-	sta JOYPAD1
-	lda #$00
-	sta JOYPAD1
-	ldx #$08		; going to read 8 buttons
-ReadControllerLoop:
-	lda JOYPAD1		; read a button
-	lsr a			; move into carry register
-	rol controller	; move from carry to controller byte
-	dex
-	bne ReadControllerLoop
-;	rts
+	jsr ReadController
 
 	lda controller	; check if right was pressed
-	and #%00000001
+	and #BTN_RIGHT
 	beq RightDone	; if not pressed, skip moving sprite
 	inc $0203		; Move sprite right
 	inc $0203+4	
@@ -151,7 +155,7 @@ ReadControllerLoop:
 RightDone:
 
 	lda controller	; check if left was pressed
-	and #%00000010
+	and #BTN_LEFT
 	beq LeftDone	; if not, skip moving sprite
 	dec $0203		; move sprite left
 	dec $0203+4
@@ -160,7 +164,7 @@ RightDone:
 LeftDone:
 
 	lda controller	; check if down was pressed
-	and #%00000100
+	and #BTN_DOWN
 	beq DownDone
 	inc $0200
 	inc $0200+4
@@ -169,7 +173,7 @@ LeftDone:
 DownDone:
 
 	lda controller	; check if up was pressed
-	and #%00001000
+	and #BTN_UP
 	beq UpDone
 	dec $0200
 	dec $0200+4
