@@ -176,7 +176,7 @@ DownDone:
 	dec $0200+8
 	dec $0200+12
 UpDone:
-	
+
 	lda #$00		; don't scroll background
 	sta PPUSCROLL
 	sta PPUSCROLL
