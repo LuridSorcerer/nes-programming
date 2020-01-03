@@ -97,6 +97,10 @@ LoadAttributetable:
 	lda #%00011110		; enable sprites
 	sta PPUMASK
 
+	lda #$80			; move player to center of screen
+	sta playerx
+	sta playery
+
 forever:			; loop forever, nothing else to do
 	jmp forever
 .endproc
@@ -118,6 +122,16 @@ ReadControllerLoop:
 	rol controller	; move from carry to controller byte
 	dex
 	bne ReadControllerLoop
+	rts
+
+DrawPlayer:			; renders the player based on saved x and y coords
+	lda playery
+	sta $0200
+	sta $0200+4
+	lda playerx 
+	sta $0203
+	adc #$08
+	sta $0203+4
 	rts
 
 PaletteData:
@@ -148,38 +162,44 @@ AttributetableEnd:
 	lda controller	; check if right was pressed
 	and #BTN_RIGHT
 	beq RightDone	; if not pressed, skip moving sprite
-	inc $0203		; Move sprite right
-	inc $0203+4	
-	inc $0203+8	
-	inc $0203+12
+	;inc playerx
+;	inc $0203		; Move sprite right
+;	inc $0203+4	
+;	inc $0203+8	
+;	inc $0203+12
 RightDone:
 
 	lda controller	; check if left was pressed
 	and #BTN_LEFT
 	beq LeftDone	; if not, skip moving sprite
-	dec $0203		; move sprite left
-	dec $0203+4
-	dec $0203+8
-	dec $0203+12
+	dec playerx
+;	dec $0203		; move sprite left
+;	dec $0203+4
+;	dec $0203+8
+;	dec $0203+12
 LeftDone:
 
 	lda controller	; check if down was pressed
 	and #BTN_DOWN
 	beq DownDone
-	inc $0200
-	inc $0200+4
-	inc $0200+8
-	inc $0200+12
+	inc playery
+;	inc $0200
+;	inc $0200+4
+;	inc $0200+8
+;	inc $0200+12
 DownDone:
 
 	lda controller	; check if up was pressed
 	and #BTN_UP
 	beq UpDone
-	dec $0200
-	dec $0200+4
-	dec $0200+8
-	dec $0200+12
+	dec playery
+;	dec $0200
+;	dec $0200+4
+;	dec $0200+8
+;	dec $0200+12
 UpDone:
+
+	jsr DrawPlayer
 
 	lda #$00		; don't scroll background
 	sta PPUSCROLL
