@@ -129,6 +129,7 @@ DrawPlayer:			; renders the player based on saved x and y coords
 	sta $0200
 	sta $0200+4
 	lda playerx 
+	clc
 	sta $0203
 	adc #$08
 	sta $0203+4
@@ -162,7 +163,7 @@ AttributetableEnd:
 	lda controller	; check if right was pressed
 	and #BTN_RIGHT
 	beq RightDone	; if not pressed, skip moving sprite
-	;inc playerx
+	inc playerx
 ;	inc $0203		; Move sprite right
 ;	inc $0203+4	
 ;	inc $0203+8	
