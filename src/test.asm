@@ -125,14 +125,22 @@ ReadControllerLoop:
 	rts
 
 DrawPlayer:			; renders the player based on saved x and y coords
-	lda playery
+	
+	lda playery		; update y position on the four sub-sprites
 	sta $0200
 	sta $0200+4
-	lda playerx 
 	clc
+	adc #$08
+	sta $0200+8
+	sta $0200+12
+	
+	lda playerx 	; update the x position on the four sub-sprites
 	sta $0203
+	sta $0203+8
+	clc
 	adc #$08
 	sta $0203+4
+	sta $0203+12
 	rts
 
 PaletteData:
