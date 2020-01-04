@@ -14,7 +14,6 @@ playery:	.res 1
 	cld		; CLear Decimal: disable binary coded decimal mode
 			; 	(not supported by the 2A03 anyway)
 
-	
 	ldx #$ff	; Set stack pointer to $FF
 	txs
 
@@ -172,40 +171,24 @@ AttributetableEnd:
 	and #BTN_RIGHT
 	beq RightDone	; if not pressed, skip moving sprite
 	inc playerx
-;	inc $0203		; Move sprite right
-;	inc $0203+4	
-;	inc $0203+8	
-;	inc $0203+12
 RightDone:
 
 	lda controller	; check if left was pressed
 	and #BTN_LEFT
 	beq LeftDone	; if not, skip moving sprite
 	dec playerx
-;	dec $0203		; move sprite left
-;	dec $0203+4
-;	dec $0203+8
-;	dec $0203+12
 LeftDone:
 
 	lda controller	; check if down was pressed
 	and #BTN_DOWN
 	beq DownDone
 	inc playery
-;	inc $0200
-;	inc $0200+4
-;	inc $0200+8
-;	inc $0200+12
 DownDone:
 
 	lda controller	; check if up was pressed
 	and #BTN_UP
 	beq UpDone
 	dec playery
-;	dec $0200
-;	dec $0200+4
-;	dec $0200+8
-;	dec $0200+12
 UpDone:
 
 	jsr DrawPlayer
