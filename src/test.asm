@@ -64,6 +64,7 @@ LoadSprites:
 	cpx #(SpriteEnd - SpriteData)
 	bne LoadSprites
 
+	;; TODO: Replace with nested loop ;;
 	lda $2002		; load background nametable
 	lda #$20
 	sta PPUADDR
