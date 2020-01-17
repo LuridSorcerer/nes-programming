@@ -2,6 +2,8 @@
 .include "header.asm"
 
 .segment "ZEROPAGE"
+pointerLo:	.res 1
+pointerHi:	.res 1
 controller: .res 1
 playerx:	.res 1
 playery:	.res 1
@@ -64,20 +66,29 @@ LoadSprites:
 	cpx #(SpriteEnd - SpriteData)
 	bne LoadSprites
 
-	;; TODO: Replace with nested loop ;;
 	lda $2002		; load background nametable
 	lda #$20
 	sta PPUADDR
 	lda #$00
 	sta PPUADDR
-	ldx #$00
-LoadNametable:
-	lda NametableData, x
-	sta PPUDATA
-	inx
-	cpx #(NametableEnd - NametableData)
-	bne LoadNametable
 
+	lda #.LOBYTE(NametableData) ; move pointer to start of nametable
+	sta pointerLo
+	lda #.HIBYTE(NametableData)
+	sta pointerHi
+
+	ldy #$00
+LoadNametableOuter:			; will need to loop 4 times...
+LoadNametableInner:			; through 256 tiles
+	lda (pointerLo), y
+	sta PPUDATA
+	iny
+	bne LoadNametableInner
+	inc pointerHi
+	lda pointerHi
+	cmp #.HIBYTE(NametableData)+4
+	bne LoadNametableOuter
+	
 	lda $2002		; load attribute table
 	lda #$23
 	sta PPUADDR
