@@ -7,6 +7,7 @@ pointerHi:	.res 1
 controller: .res 1
 playerx:	.res 1
 playery:	.res 1
+scroll:		.res 1
 
 .code
 
@@ -205,8 +206,10 @@ UpDone:
 
 	jsr DrawPlayer
 
-	lda #$00		; don't scroll background
+	inc scroll		; increment horizontal scroll
+	lda scroll
 	sta PPUSCROLL
+	lda #$00		; do not increment vertical scroll
 	sta PPUSCROLL
 
 	rti
