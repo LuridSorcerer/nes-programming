@@ -1,5 +1,5 @@
     ; background
-    .byte $00,$18,$27,$28 ; bg palette 1
+    .byte $00,$1D,$2D,$28 ; bg palette 1
     .byte $00,$24,$25,$26 ; bg palette 2
     .byte $00,$28,$29,$2a ; bg palette 3
     .byte $00,$2b,$2c,$2d ; bg palette 4

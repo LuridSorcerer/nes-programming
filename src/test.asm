@@ -206,11 +206,11 @@ UpDone:
 
 	jsr DrawPlayer
 
-	inc scroll		; increment horizontal scroll
-	lda scroll
-	sta PPUSCROLL
-	lda #$00		; do not increment vertical scroll
-	sta PPUSCROLL
+	; inc scroll		; increment horizontal scroll
+	; lda scroll
+	; sta PPUSCROLL
+	; lda #$00		; do not increment vertical scroll
+	; sta PPUSCROLL
 
 	rti
 
